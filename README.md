@@ -11,9 +11,7 @@ Este proyecto implementa un flujo completo de Data Warehouse Automation (DWA) so
 
 ## 🔄 Flujo de Datos
 
-```
 ![Flujo del DWA](./flujo-dwa.png)
-```
 
 ## 🧱 Estructura de Capas
 - `TMP_`: staging crudo desde NiFi
