@@ -12,7 +12,7 @@ Este proyecto implementa un flujo completo de Data Warehouse Automation (DWA) so
 ## 🔄 Flujo de Datos
 
 ```
-[CSV] → NiFi → TMP_ (PostgreSQL) → dbt → DWA_ / DQM_ / DWM_ / DP_ → Lightdash
+![Flujo del DWA](./flujo-dwa.png)
 ```
 
 ## 🧱 Estructura de Capas
