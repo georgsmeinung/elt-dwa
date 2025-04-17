@@ -1,7 +1,7 @@
 # Proyecto DWA - Data Warehouse Automation con NiFi, dbt, PostgreSQL y Lightdash
 
 ## 📌 Descripción General
-Este proyecto implementa un flujo completo de Data Warehouse Automation (DWA) solicitado por la materia "Introducción a Data Warehousing". Utiliza herramientas 100% open source orquestadas con Docker Compose:
+Este proyecto implementa un flujo completo de Data Warehouse Automation (DWA) solicitado en [TPG01 – Flujo de datos en un DWA.pdf](MCD 2025 IDW - TPG01 Flujo DWA-1e.pdf). Utiliza herramientas 100% open source orquestadas con Docker Compose:
 
 - **Apache NiFi**: Ingesta y carga de archivos CSV
 - **PostgreSQL**: Base de datos para staging y DWA
