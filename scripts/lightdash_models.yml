@@ -1,1 +1,34 @@
 version: 1
+
+models:
+  - name: dp_sales_summary
+    description: Resumen de ventas por orden, cliente y empleado.
+    dimensions:
+      - name: orderdate
+        type: date
+      - name: customer_name
+        type: string
+      - name: employee_name
+        type: string
+      - name: shipcountry
+        type: string
+    measures:
+      - name: total_amount
+        type: sum
+        sql: total_amount
+      - name: orderid
+        type: count_distinct
+        sql: orderid
+
+  - name: dp_top_countries
+    description: Ranking de países por ingresos totales y cantidad de pedidos.
+    dimensions:
+      - name: shipcountry
+        type: string
+    measures:
+      - name: total_orders
+        type: sum
+        sql: total_orders
+      - name: total_revenue
+        type: sum
+        sql: total_revenue

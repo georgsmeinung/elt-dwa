@@ -1,1 +1,34 @@
 name: elt_project
+version: '1.0'
+config-version: 2
+
+profile: elt_project
+
+target-path: target
+clean-targets:
+  - target
+  - dbt_modules
+
+source-paths:
+  - models
+
+analysis-paths: []
+test-paths: []
+data-paths: []
+macro-paths: []
+
+model-paths:
+  - models
+
+models:
+  elt_project:
+    tmp:
+      materialized: view
+    dwa:
+      materialized: table
+    dwm:
+      materialized: incremental
+    dqm:
+      materialized: table
+    dp:
+      materialized: view

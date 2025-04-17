@@ -1,0 +1,61 @@
+version: 2
+
+models:
+  - name: dwa_orders
+    description: "Pedidos limpios con campos normalizados"
+    columns:
+      - name: orderid
+        tests: [not_null, unique]
+      - name: customerid
+      - name: orderdate
+
+  - name: dwa_customers
+    description: "Clientes con claves únicas y datos consistentes"
+    columns:
+      - name: customerid
+        tests: [not_null, unique]
+      - name: companyname
+
+  - name: dwa_products
+    description: "Productos sin discontinuados"
+    columns:
+      - name: productid
+        tests: [not_null, unique]
+      - name: unitprice
+
+  - name: dwm_orders
+    description: "Historial de pedidos con validez temporal (SCD tipo 2)"
+    columns:
+      - name: orderid
+      - name: valid_from
+      - name: valid_to
+      - name: is_current
+
+  - name: dqm_orders_quality
+    description: "Indicadores de calidad sobre pedidos cargados"
+    columns:
+      - name: total_records
+      - name: missing_orderdate
+      - name: evaluated_at
+
+  - name: dqm_ingesta_tracking
+    description: "Historial de archivos cargados desde NiFi"
+    columns:
+      - name: tabla
+      - name: archivo
+      - name: registros
+      - name: fecha_ingesta
+
+  - name: dp_sales_summary
+    description: "Vista de resumen de ventas por orden"
+    columns:
+      - name: orderid
+      - name: customer_name
+      - name: total_amount
+
+  - name: dp_top_countries
+    description: "Ranking de países por ingreso total"
+    columns:
+      - name: shipcountry
+      - name: total_orders
+      - name: total_revenue
