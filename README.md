@@ -18,7 +18,7 @@ Este proyecto implementa un flujo completo de Data Warehouse Automation (DWA) so
 ## 🧱 Estructura de Capas
 - `TMP_`: staging crudo desde NiFi
 - `DWA_`: modelo limpio y validado
-- `DWM_`: memoria histórica con SCD tipo 2
+- `DWM_`: memoria histórica con SCD tipo 2 (Slowly Changing Dimension Type 2)
 - `DQM_`: data quality mart (indicadores de calidad)
 - `DP_`: producto de datos para dashboards
 
