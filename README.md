@@ -64,7 +64,7 @@ docker compose up -d
 docker exec -it elt_dbt dbt run
 ```
 
-## 📂 Estructura del Proyecto
+## 📂 [Estructura del Proyecto](docs/STRUCT.md)
 ```
 ├── dbt/
 │   ├── models/
@@ -80,5 +80,11 @@ docker exec -it elt_dbt dbt run
 
 ---
 
-**Autores**: Cancelas, Nicolau, Verdejo - Introducción a Data Warehouse - 2025
+**Autores**: 
+
+   - CANCELAS, Martín
+   - NICOLAU, Jorge
+   - VERDEJO, Manuel 
+
+**Introducción a Data Warehouse - 2025**
 
