@@ -64,7 +64,8 @@ docker compose up -d
 docker exec -it elt_dbt dbt run
 ```
 
-## 📂 [Estructura del Proyecto](docs/STRUCT.md)
+## 📂 Estructura del Proyecto
+Guía detallada en [docs/STRUCT.md](docs/STRUCT.md)
 ```
 ├── dbt/
 │   ├── models/
