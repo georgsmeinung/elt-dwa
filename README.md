@@ -12,9 +12,7 @@ Este proyecto implementa una solución completa de Data Warehouse Automation (DW
 
 ## 🔄 Flujo de Datos
 
-```plaintext
-[CSV] → NiFi → TMP_ (PostgreSQL) → SQLMesh → DWA_ / DWM_ / DQM_ / DP_ → Lightdash
-```
+![](docs/flujo-dwa.png)
 
 ## 🧱 Estructura de Capas
 - `TMP_`: staging crudo cargado por NiFi
