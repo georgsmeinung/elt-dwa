@@ -1,131 +1,68 @@
-# Explicación detallada de la estructura del repositorio `elt-dwa/`
+# Estructura del Repositorio `elt-dwa`
 
-Este documento explica línea por línea la estructura del repositorio generado para un flujo de Data Warehouse Automation (DWA) con herramientas open source.
-
-```bash
-elt-dwa/
-```
-Carpeta raíz del proyecto.
+Este archivo describe la organización del repositorio del proyecto de Data Warehouse Automation (DWA) utilizando **SQLMesh**, **PostgreSQL**, **Apache NiFi**, **Lightdash** y otras herramientas open source.
 
 ---
 
-## `data/`
+## 📁 `models/`
+Contiene todos los modelos SQL que definen las transformaciones por capas.
 
-```bash
-├── data/
-│   └── ingesta1/
-```
-Contiene los archivos CSV de entrada utilizados en las cargas iniciales. Simula el origen de datos crudos que NiFi va a procesar.
+### 📂 `models/tmp/`
+- Modelos de staging (`tmp_`) que replican las tablas cargadas por NiFi en PostgreSQL.
+- No aplican transformaciones, solo exponen los datos crudos.
 
----
+### 📂 `models/dwa/`
+- Modelos transformados y validados (`dwa_`).
+- Aplican cast de tipos, filtros, limpieza de datos, joins.
+- Esta es la capa del Data Warehouse "limpio".
 
-## `dbt/`
+### 📂 `models/dwm/`
+- Modelos con memoria histórica (`dwm_`) usando SCD tipo 2.
+- Conservan versiones anteriores de los registros con columnas `valid_from`, `valid_to`, `is_current`.
 
-```bash
-├── dbt/
-```
-Directorio principal del proyecto `dbt`, que contiene:
-- Modelos SQL organizados por capa (TMP, DWA, etc.)
-- Archivos de configuración y documentación
+### 📂 `models/dqm/`
+- Modelos de calidad de datos (`dqm_`).
+- Calculan métricas como valores nulos, duplicados, inconsistencias y log de ingesta (`dqm_ingesta_tracking`).
 
-### `models/`
-
-```bash
-│   ├── models/
-```
-Contiene los modelos de transformación de datos estructurados por capas:
-
-#### `tmp/`
-```bash
-│   │   ├── tmp/
-```
-Modelos de staging: `SELECT * FROM tmp_<tabla>` que reproducen los datos sin transformación para facilitar validaciones.
-
-#### `dwa/`
-```bash
-│   │   ├── dwa/
-```
-Modelos de limpieza y normalización. Aquí se ajustan tipos de datos, se filtran registros inválidos y se realizan joins simples.
-
-#### `dwm/`
-```bash
-│   │   ├── dwm/
-```
-Modelos de memoria histórica. Implementan SCD Tipo 2 para conservar versiones históricas de registros.
-
-#### `dqm/`
-```bash
-│   │   ├── dqm/
-```
-Modelos que calculan indicadores de calidad y trazabilidad de ingesta. Incluye métricas como nulos, duplicados, etc.
-
-#### `dp/`
-```bash
-│   │   └── dp/
-```
-Vistas finales para dashboards. Muestran datos ya agregados y curados para ser consumidos por Lightdash.
-
-### `schema.yml`
-```bash
-│   ├── schema.yml
-```
-Define documentación y tests automáticos (not_null, unique, etc.) para cada modelo y columna de dbt.
-
-### `dbt_project.yml`
-```bash
-│   └── dbt_project.yml
-```
-Archivo de configuración principal del proyecto dbt: rutas, capas, materializaciones y nombre del proyecto.
+### 📂 `models/dp/`
+- Producto de datos (`dp_`): vistas finales para análisis y dashboards.
+- Contienen agregaciones, métricas y dimensiones utilizadas por Lightdash.
 
 ---
 
-## `docs/`
+## 📄 `sqlmesh_project.toml`
+Archivo de configuración del proyecto SQLMesh.
 
-```bash
-├── docs/
-│   └── flujo-dwa.png
-```
-Documentación visual. Incluye el diagrama del flujo de datos a través del pipeline ELT.
+- Define el nombre del proyecto, dialecto (PostgreSQL) y conexión a la base de datos.
 
 ---
 
-## `docker-compose.yml`
-```bash
-├── docker-compose.yml
-```
-Archivo para levantar el entorno completo con Docker: NiFi, PostgreSQL, dbt Core, Lightdash, DBGate, etc.
+## 📁 `data/ingesta1/`
+- Carpeta que contiene los archivos CSV fuente.
+- Estos archivos son cargados por NiFi hacia las tablas `TMP_` en PostgreSQL.
 
 ---
 
-## `README.md`
-```bash
-├── README.md
-```
-Explica qué hace el proyecto, cómo usarlo, cómo ejecutar transformaciones y acceder a dashboards.
+## 📄 `docker-compose.yml`
+Archivo para levantar todo el entorno de desarrollo local.
+
+Contiene los siguientes servicios:
+- `postgres`: almacén de datos
+- `sqlmesh`: motor de transformación y UI
+- `nifi`: motor de ingesta visual
+- `lightdash`: herramienta BI sobre DP_
+- `dbgate`: cliente web para inspección manual de la base
 
 ---
 
-## `scripts/`
-
-```bash
-└── scripts/
-    ├── create_tables_tmp.sql
-    ├── create_tables_dwa.sql
-    ├── create_tables_dwm.sql
-    ├── create_tables_dqm.sql
-    ├── create_tables_dp.sql
-    ├── nifi_log_ingesta.sql
-    └── lightdash_models.yml
-```
-Utilidades:
-- `create_tables_tmp.sql`: define las tablas de staging (TMP_)
-- `create_tables_dwa.sql`: define las tablas del data warehouse (DWA_)
-- `create_tables_dwm.sql`: define las tablas del SCD tipo 2 (DWM_)
-- `create_tables_dqm.sql`: define las tablas del data quality mart (DQM_)
-- `create_tables_dp.sql`: define las tablas de data products (DP_)
-- `nifi_log_ingesta.sql`: ejemplo de inserción de log desde NiFi
-- `lightdash_models.yml`: mapea métricas y dimensiones para usar los modelos dbt en Lightdash
+## 📄 `README.md`
+- Guía general del proyecto: qué hace, cómo usarlo, puertos, estructura.
 
 ---
 
-Esta estructura permite aislar responsabilidades por capa, mantener un linaje trazable y facilitar el trabajo colaborativo, tanto para el desarrollo como para la entrega académica o profesional.
+## 📄 `docs/STRUCT.md`
+- Este archivo. Explica en detalle la estructura de carpetas y archivos del repositorio.
+
+---
+
+Esta estructura modular permite mantener separado cada paso del flujo de datos, mejorar la trazabilidad, facilitar el testing y exponer los resultados en forma visual y reutilizable.

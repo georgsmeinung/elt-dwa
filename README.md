@@ -1,91 +1,89 @@
-# Proyecto DWA - Data Warehouse Automation con NiFi, dbt, PostgreSQL y Lightdash
+# Proyecto DWA con SQLMesh, PostgreSQL, NiFi y Lightdash
 
 ## 📌 Descripción General
-Este proyecto implementa un flujo completo de Data Warehouse Automation (DWA) solicitado en [MCD 2025 IDW - TPG01 Flujo DWA-1e](docs/MCD_2025_IDW-TPG01_Flujo_DWA-1e.md). Utiliza herramientas 100% open source orquestadas con Docker Compose:
+Este proyecto implementa una solución completa de Data Warehouse Automation (DWA) solicitado en [MCD 2025 IDW - TPG01 Flujo DWA-1e](docs/MCD_2025_IDW-TPG01_Flujo_DWA-1e.md), utilizando solo herramientas **open source**. 
 
+### 🛠 Herramientas utilizadas
 - **Apache NiFi**: Ingesta y carga de archivos CSV
-- **PostgreSQL**: Base de datos para staging y DWA
-- **dbt Core**: Transformación, documentación y control de calidad
-- **Lightdash**: Visualización y dashboards
-- **DBGate**: Administración visual de la base de datos
+- **PostgreSQL**: Base de datos para staging y almacén de datos
+- **SQLMesh**: Transformaciones, linaje, entornos y visualización de DAG
+- **Lightdash**: Dashboards BI sobre las vistas generadas
+- **DBGate**: Interfaz web para consultar la base de datos
 
 ## 🔄 Flujo de Datos
 
-![Flujo del DWA](./docs/flujo-dwa.png)
-
-## 🧱 Estructura de Capas
-- `TMP_`: staging crudo desde NiFi
-- `DWA_`: modelo limpio y validado
-- `DWM_`: memoria histórica con SCD tipo 2 (Slowly Changing Dimension Type 2)
-- `DQM_`: data quality mart (indicadores de calidad)
-- `DP_`: producto de datos para dashboards
-
-## 🧭 Trazabilidad de Datos (End-to-End Lineage)
-
-- **Desde Lightdash hasta dbt**: el lineage es automático
-- **Desde dbt a TMP_**: visible en `dbt docs`
-- **Desde TMP_ al CSV original**: trazabilidad registrada en la tabla `dqm_ingesta_log`
-
-```sql
--- Tracking automático por NiFi:
-INSERT INTO dqm_ingesta_log (tabla, archivo, registros)
-VALUES ('tmp_orders', 'orders_2023.csv', 1540);
+```plaintext
+[CSV] → NiFi → TMP_ (PostgreSQL) → SQLMesh → DWA_ / DWM_ / DQM_ / DP_ → Lightdash
 ```
 
-- **Modelo dbt**: `dqm_ingesta_tracking.sql` permite visualizar estas cargas en dashboards Lightdash
+## 🧱 Estructura de Capas
+- `TMP_`: staging crudo cargado por NiFi
+- `DWA_`: datos limpios, transformados y normalizados
+- `DWM_`: memoria histórica utilizando SCD Tipo 2 para conservar cambios en el tiempo
+- `DQM_`: métricas de calidad de datos (valores faltantes, duplicados)
+- `DP_`: vistas de producto para dashboards (ventas, resumen por país, etc.)
 
-## 📊 Dashboards Lightdash
+## 📊 Visualización y Gestión
 
-### 1. `Ventas por País y Cliente`
-- Fuente: `dp_sales_summary`
-- Visualizaciones: barras por país, tabla por cliente/empleado, serie temporal
+### SQLMesh UI
+Accedé a SQLMesh en: [http://localhost:8084](http://localhost:8084)
+- Visualizá el DAG de transformaciones
+- Editá modelos `.sql` directamente
+- Aplicá cambios por ambiente (`dev`, `prod`, etc.)
 
-### 2. `Top 10 Países por Ingresos`
-- Fuente: `dp_top_countries`
-- Visualizaciones: columnas y tabla de resumen
+### Lightdash
+Visualizá los dashboards BI en: [http://localhost:8081](http://localhost:8081)
 
-### 3. `Historial de Ingesta de Datos`
-- Fuente: `dqm_ingesta_tracking`
-- Muestra qué archivos se cargaron, cuándo y con cuántos registros
+### DBGate
+Explorá las tablas y consultas en: [http://localhost:8082](http://localhost:8082)
+
+### NiFi
+Carga visual de archivos CSV en: [http://localhost:8080](http://localhost:8080)
+
+---
 
 ## 🚀 Cómo ejecutar
-1. Clonar este repositorio
-2. Colocar los CSV en `./data/ingesta1/`
-3. Ejecutar:
+
 ```bash
 docker compose up -d
 ```
-4. Acceder a:
-   - NiFi: http://localhost:8080
-   - DBGate: http://localhost:8082
-   - Lightdash: http://localhost:8081
-5. Ejecutar transformaciones:
+
+Luego accedé a cada herramienta por los puertos indicados arriba.
+
+Para compilar y aplicar los modelos en SQLMesh desde consola:
+
 ```bash
-docker exec -it elt_dbt dbt run
+docker exec -it elt_sqlmesh bash
+sqlmesh plan
+sqlmesh apply
 ```
 
-## 📂 Estructura del Proyecto
-Guía detallada en [docs/STRUCT.md](docs/STRUCT.md)
-```
-├── dbt/
-│   ├── models/
-│   │   ├── tmp/
-│   │   ├── dwa/
-│   │   ├── dwm/
-│   │   ├── dqm/
-│   │   ├── dp/
-├── data/ingesta1/
-├── docker-compose.yml
+> También podés hacerlo desde la UI en http://localhost:8084
+
+---
+
+## 🧩 Estructura del proyecto
+Detalle de estructura en [docs/STRUCT.md](docs/STRUCT.md).
+
+```bash
+elt-dwa/
+├── sqlmesh_project.toml             # Configuración del proyecto SQLMesh
+├── models/
+│   ├── tmp/                         # Modelos de staging
+│   ├── dwa/                         # Transformaciones limpias
+│   ├── dwm/                         # Memoria histórica con SCD tipo 2
+│   ├── dqm/                         # Calidad de datos
+│   └── dp/                          # Producto de datos (dashboards)
+├── data/ingesta1/                   # Archivos CSV cargados por NiFi
+├── docker-compose.yml              # Orquestación de servicios
 └── README.md
 ```
 
 ---
 
-**Autores**: 
+## ✨ Créditos
+Proyecto desarrollado con herramientas 100% libres y abiertas para demostrar el potencial de una arquitectura de DWA moderna sin vendor lock-in.
 
-   - [CANCELAS, Martín](https://www.linkedin.com/in/mart%C3%ADn-cancelas-2313a1154/)
-   - [NICOLAU, Jorge](https://jorgenicolau.ar/)
-   - [VERDEJO, Manuel](https://www.linkedin.com/in/manuel-nicol%C3%A1s-verdejo-b19255126/)
+---
 
-**Introducción a Data Warehouse - 2025**
-
+¿Preguntas, mejoras o ideas? ¡Abrí un issue o fork y contribuí!

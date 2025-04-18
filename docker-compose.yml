@@ -14,15 +14,18 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
-  dbt:
-    image: ghcr.io/dbt-labs/dbt-postgres:1.5.2
-    container_name: elt_dbt
-    depends_on:
-      - postgres
+  sqlmesh:
+    image: python:3.11-slim
+    container_name: elt_sqlmesh
+    ports:
+      - "8084:8000"
     volumes:
-      - ./dbt:/usr/app
-    working_dir: /usr/app
-    command: tail -f /dev/null
+      - ./sqlmesh:/app/sqlmesh
+    working_dir: /app/sqlmesh
+    command: >
+      sh -c "
+        pip install sqlmesh[web] && \
+        sqlmesh ui --host 0.0.0.0 --port 8000"
 
   lightdash:
     image: lightdash/lightdash:latest
@@ -31,9 +34,9 @@ services:
     ports:
       - "8081:8080"
     environment:
-      - DBT_PROJECT_DIR=/usr/app
+      - DBT_PROJECT_DIR=/app/sqlmesh
     volumes:
-      - ./dbt:/usr/app
+      - ./sqlmesh:/app/sqlmesh
 
   dbgate:
     image: dbgate/dbgate
@@ -52,19 +55,6 @@ services:
       NIFI_WEB_HTTP_PORT: 8080
     volumes:
       - ./nifi:/opt/nifi/nifi-current/conf
-
-  sqlmesh:
-    image: python:3.11-slim
-    container_name: elt_sqlmesh
-    ports:
-      - "8084:8000"
-    volumes:
-      - ./dbt:/app/dbt
-    working_dir: /app/dbt
-    command: >
-      sh -c "
-        pip install sqlmesh[web] && \
-        sqlmesh ui --host 0.0.0.0 --port 8000"
 
 volumes:
   pgdata:

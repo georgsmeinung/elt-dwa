@@ -1,0 +1,7 @@
+[project]
+name = "elt_dwa"
+dialect = "postgres"
+default_catalog = "elt_db"
+
+[gateways.local]
+connection_string = "postgresql://elt_user:elt_pass@postgres:5432/elt_db"
