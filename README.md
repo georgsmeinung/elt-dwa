@@ -79,8 +79,13 @@ elt-dwa/
 
 ---
 
-## ✨ Créditos
-Proyecto desarrollado con herramientas 100% libres y abiertas para demostrar el potencial de una arquitectura de DWA moderna sin vendor lock-in.
+## Autores
+
+- [CANCELAS, Martín](https://www.linkedin.com/in/mart%C3%ADn-cancelas-2313a1154/)
+- [NICOLAU, Jorge](https://jorgenicolau.ar/)
+- [VERDEJO, Manuel](https://www.linkedin.com/in/manuel-nicol%C3%A1s-verdejo-b19255126/)
+
+**Introduccín a Data Warehousing - 2025**
 
 ---
 
