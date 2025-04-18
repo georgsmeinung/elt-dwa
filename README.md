@@ -74,8 +74,9 @@ elt-dwa/
 │   ├── dwm/                         # Memoria histórica con SCD tipo 2
 │   ├── dqm/                         # Calidad de datos
 │   └── dp/                          # Producto de datos (dashboards)
+├── docs/                            # Documentacion detallada
 ├── data/ingesta1/                   # Archivos CSV cargados por NiFi
-├── docker-compose.yml              # Orquestación de servicios
+├── docker-compose.yml               # Orquestación de servicios
 └── README.md
 ```
 
@@ -87,7 +88,7 @@ elt-dwa/
 - [NICOLAU, Jorge](https://jorgenicolau.ar/)
 - [VERDEJO, Manuel](https://www.linkedin.com/in/manuel-nicol%C3%A1s-verdejo-b19255126/)
 
-**Introduccín a Data Warehousing - 2025**
+**Introduccíon a Data Warehousing - 2025**
 
 ---
 
