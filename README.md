@@ -58,6 +58,8 @@ sqlmesh apply
 
 > También podés hacerlo desde la UI en http://localhost:8084
 
+Paso a paso en [docs/PLAYBOOK.md](docs/PLAYBOOK.md)
+
 ---
 
 ## 🧩 Estructura del proyecto
