@@ -12,7 +12,7 @@ Este proyecto implementa una solución completa de Data Warehouse Automation (DW
 
 ## 🔄 Flujo de Datos
 
-![](docs/flujo-dwa.png)
+![](docs/flujo-dwa-sqlmesh.png)
 
 ## 🧱 Estructura de Capas
 - `TMP_`: staging crudo cargado por NiFi
