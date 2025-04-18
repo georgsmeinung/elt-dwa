@@ -114,16 +114,18 @@ sqlmesh apply
 
 ```bash
 elt-dwa/
-├── models/                      # Modelos SQL por capa
-│   ├── tmp/                     # Staging
-│   ├── dwa/                     # Transformaciones limpias
-│   ├── dwm/                     # Históricos con SCD2
-│   ├── dqm/                     # Calidad de datos
-│   └── dp/                      # Producto de datos
-├── docs/                      # Documentacion detallada
+├── models/                     # Modelos SQL por capa
+│   ├── tmp/                    # Staging
+│   ├── dwa/                    # Transformaciones limpias
+│   ├── dwm/                    # Históricos con SCD2
+│   ├── dqm/                    # Calidad de datos
+│   └── dp/                     # Producto de datos
+├── docs/                       # Documentacion detallada
 ├── sqlmesh_project.toml        # Configuración del proyecto
 ├── docker-compose.yml          # Servicios y puertos
-├── data/ingesta1/              # Archivos CSV
+├── data/
+│   ├── ingesta1/               # CSV carga inicial
+│   └── ingesta2/               # CSV carga novedades
 └── README.md                   # Documentación principal
 
 ```

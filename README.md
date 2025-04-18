@@ -67,16 +67,18 @@ Detalle de estructura en [docs/STRUCT.md](docs/STRUCT.md).
 
 ```bash
 elt-dwa/
-├── sqlmesh_project.toml             # Configuración del proyecto SQLMesh
+├── sqlmesh_project.toml            # Configuración del proyecto SQLMesh
 ├── models/
-│   ├── tmp/                         # Modelos de staging
-│   ├── dwa/                         # Transformaciones limpias
-│   ├── dwm/                         # Memoria histórica con SCD tipo 2
-│   ├── dqm/                         # Calidad de datos
-│   └── dp/                          # Producto de datos (dashboards)
-├── docs/                            # Documentacion detallada
-├── data/ingesta1/                   # Archivos CSV cargados por NiFi
-├── docker-compose.yml               # Orquestación de servicios
+│   ├── tmp/                        # Modelos de staging
+│   ├── dwa/                        # Transformaciones limpias
+│   ├── dwm/                        # Memoria histórica con SCD tipo 2
+│   ├── dqm/                        # Calidad de datos
+│   └── dp/                         # Producto de datos (dashboards)
+├── docs/                           # Documentacion detallada
+├── data/
+│   ├── ingesta1/                   # CSV carga inicial
+│   └── ingesta2/                   # CSV carga novedades
+├── docker-compose.yml              # Orquestación de servicios
 └── README.md
 ```
 
