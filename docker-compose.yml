@@ -1,61 +1,70 @@
 version: '3.8'
 
 services:
-
   postgres:
-    image: postgres:15
+    image: postgres:13
     container_name: elt_postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
     environment:
       POSTGRES_USER: elt_user
       POSTGRES_PASSWORD: elt_pass
       POSTGRES_DB: elt_db
-    ports:
-      - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-  nifi:
-    image: apache/nifi:latest
-    container_name: elt_nifi
-    ports:
-      - "8080:8080"
-    environment:
-      NIFI_WEB_HTTP_PORT: 8080
-    restart: unless-stopped
+      - pgdata:/var/lib/postgresql/data
 
   dbt:
-    image: ghcr.io/dbt-labs/dbt-postgres
+    image: ghcr.io/dbt-labs/dbt-postgres:1.5.2
     container_name: elt_dbt
+    depends_on:
+      - postgres
     volumes:
       - ./dbt:/usr/app
     working_dir: /usr/app
-    entrypoint: ["tail", "-f", "/dev/null"]
+    command: tail -f /dev/null
 
   lightdash:
     image: lightdash/lightdash:latest
     container_name: elt_lightdash
-    depends_on:
-      - postgres
+    restart: unless-stopped
     ports:
       - "8081:8080"
     environment:
-      LIGHTDASH_PROJECT_DIR: /usr/app
-      PGUSER: elt_user
-      PGPASSWORD: elt_pass
-      PGHOST: postgres
-      PGPORT: 5432
-      PGDATABASE: elt_db
+      - DBT_PROJECT_DIR=/usr/app
     volumes:
       - ./dbt:/usr/app
 
   dbgate:
     image: dbgate/dbgate
     container_name: elt_dbgate
+    restart: unless-stopped
     ports:
       - "8082:3000"
+
+  nifi:
+    image: apache/nifi:latest
+    container_name: elt_nifi
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
     environment:
-      CONNECTIONS: '[{"name":"Postgres","server":"postgres","user":"elt_user","password":"elt_pass","database":"elt_db","engine":"postgres"}]'
+      NIFI_WEB_HTTP_PORT: 8080
+    volumes:
+      - ./nifi:/opt/nifi/nifi-current/conf
+
+  sqlmesh:
+    image: python:3.11-slim
+    container_name: elt_sqlmesh
+    ports:
+      - "8084:8000"
+    volumes:
+      - ./dbt:/app/dbt
+    working_dir: /app/dbt
+    command: >
+      sh -c "
+        pip install sqlmesh[web] && \
+        sqlmesh ui --host 0.0.0.0 --port 8000"
 
 volumes:
-  postgres_data:
-
+  pgdata:
