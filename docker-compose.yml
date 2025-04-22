@@ -17,26 +17,30 @@ services:
   sqlmesh:
     image: python:3.11-slim
     container_name: elt_sqlmesh
+    depends_on:
+      - postgres
     ports:
       - "8084:8000"
     volumes:
-      - ./sqlmesh:/app/sqlmesh
+      - ${PWD}/sqlmesh:/app/sqlmesh
     working_dir: /app/sqlmesh
+    environment:
+      - PYTHONUNBUFFERED=1
     command: >
-      sh -c "
-        pip install sqlmesh[web] && \
-        sqlmesh ui --host 0.0.0.0 --port 8000"
+      sh -c "pip install sqlmesh[web] && sqlmesh ui --host 0.0.0.0 --port 8000"
 
   lightdash:
     image: lightdash/lightdash:latest
     container_name: elt_lightdash
     restart: unless-stopped
+    depends_on:
+      - sqlmesh
     ports:
       - "8081:8080"
     environment:
       - DBT_PROJECT_DIR=/app/sqlmesh
     volumes:
-      - ./sqlmesh:/app/sqlmesh
+      - ${PWD}/sqlmesh:/app/sqlmesh
 
   dbgate:
     image: dbgate/dbgate
@@ -54,7 +58,7 @@ services:
     environment:
       NIFI_WEB_HTTP_PORT: 8080
     volumes:
-      - ./nifi:/opt/nifi/nifi-current/conf
+      - ${PWD}/nifi:/opt/nifi/nifi-current/conf
 
 volumes:
   pgdata:

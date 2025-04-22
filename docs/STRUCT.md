@@ -8,25 +8,55 @@ Este archivo describe la organización del repositorio del proyecto de Data Ware
 Contiene todos los modelos SQL que definen las transformaciones por capas.
 
 ### 📂 `models/tmp/`
-- Modelos de staging (`tmp_`) que replican las tablas cargadas por NiFi en PostgreSQL.
-- No aplican transformaciones, solo exponen los datos crudos.
+Modelos de staging que reflejan la carga cruda desde CSV.
+- `tmp_orders`: pedidos originales
+- `tmp_customers`: información de clientes
+- `tmp_employees`: empleados de ventas
+- `tmp_order_details`: detalle línea por línea de cada pedido
+- `tmp_products`: productos ofrecidos
+- `tmp_suppliers`: proveedores
+- `tmp_categories`: categorías de productos
+- `tmp_regions`: regiones geográficas
+- `tmp_territories`: territorios asignados
+- `tmp_employee_territories`: asignación empleados-territorios
+- `tmp_shippers`: transportistas
+- `tmp_world_data_2023`: datos complementarios por país
 
 ### 📂 `models/dwa/`
-- Modelos transformados y validados (`dwa_`).
-- Aplican cast de tipos, filtros, limpieza de datos, joins.
-- Esta es la capa del Data Warehouse "limpio".
+Modelos transformados y validados.
+- `dwa_orders`: normalización y limpieza de pedidos, con fechas, empleados, cliente y dirección de envío.
+- `dwa_customers`: unificación de clientes con sus datos de contacto y ubicación.
+- `dwa_employees`: empleados normalizados con cargo, fechas de ingreso y contacto.
+- `dwa_products`: catálogo de productos enriquecido con precios y stock.
+- `dwa_order_details`: detalles línea por línea de cada pedido, incluyendo precio, cantidad y descuento.
+- `dwa_world_data`: datos por país con indicadores complementarios como esperanza de vida, población y coordenadas geográficas.
 
 ### 📂 `models/dwm/`
-- Modelos con memoria histórica (`dwm_`) usando SCD tipo 2.
-- Conservan versiones anteriores de los registros con columnas `valid_from`, `valid_to`, `is_current`.
+Modelos con memoria histórica.
+- `dwm_orders`: pedidos con control de versiones tipo SCD2, incluyendo fechas de vigencia y estado actual.
+- `dwm_customers`: clientes versionados históricamente por país, contacto y nombre de empresa.
+- `dwm_products`: productos con control de precio y proveedor a lo largo del tiempo.
+- `dwm_employees`: empleados con evolución de cargo, región y cambios de datos relevantes.
 
 ### 📂 `models/dqm/`
-- Modelos de calidad de datos (`dqm_`).
-- Calculan métricas como valores nulos, duplicados, inconsistencias y log de ingesta (`dqm_ingesta_tracking`).
+Modelos para control de calidad de datos.
+- `dqm_orders_quality`: detecta anomalías y faltantes en pedidos como `orderdate` y `freight` negativos.
+- `dqm_customers_quality`: valida integridad de clientes, presencia de claves y unicidad.
+- `dqm_ingesta_tracking`: tabla histórica de trazabilidad con cantidad de registros cargados por archivo.
+- `dqm_ingesta_log`: log operativo de ingesta con nombre de tabla, archivo y timestamp exacto de carga.
 
 ### 📂 `models/dp/`
-- Producto de datos (`dp_`): vistas finales para análisis y dashboards.
-- Contienen agregaciones, métricas y dimensiones utilizadas por Lightdash.
+Producto final para análisis.
+- `dp_sales_summary`: resumen de ventas consolidado, por orden, empleado, cliente, monto total y país de destino.
+- `dp_top_countries`: ranking de los 10 países con mayor cantidad de pedidos y facturación total.
+
+## 📁 `models/met/`
+Contiene los modelos de gestión de metadatos internos del pipeline DWA.
+
+- `met_model_registry`: Registro principal de modelos en uso: nombre, tipo, capa, descripción.
+- `met_model_dependencies`: Relaciones entre modelos (DAG lógico).
+- `met_model_columns`: Metadatos de columnas por modelo: nombre, tipo, nulabilidad, clave primaria.
+- `met_model_registry_hist`: Tabla con memoria histórica (SCD Tipo 2) de cambios en `met_model_registry`.
 
 ---
 

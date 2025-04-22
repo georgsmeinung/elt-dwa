@@ -11,6 +11,7 @@ Este proyecto implementa una solución completa de Data Warehouse Automation (DW
 - **DBGate**: Interfaz web para consultar la base de datos
 
 ## 🔄 Flujo de Datos
+Detalle de flujo en [docs/DATAFLOW.md](docs/DATAFLOW.md).
 
 ![](docs/flujo-dwa-sqlmesh.png)
 
@@ -20,6 +21,7 @@ Este proyecto implementa una solución completa de Data Warehouse Automation (DW
 - `DWM_`: memoria histórica utilizando SCD Tipo 2 para conservar cambios en el tiempo
 - `DQM_`: métricas de calidad de datos (valores faltantes, duplicados)
 - `DP_`: vistas de producto para dashboards (ventas, resumen por país, etc.)
+- `MET_`: modelo de metadatos para trazabilidad y gobierno del DWA
 
 ## 📊 Visualización y Gestión
 
@@ -73,14 +75,27 @@ elt-dwa/
 │   ├── dwa/                        # Transformaciones limpias
 │   ├── dwm/                        # Memoria histórica con SCD tipo 2
 │   ├── dqm/                        # Calidad de datos
-│   └── dp/                         # Producto de datos (dashboards)
-├── docs/                           # Documentacion detallada
+│   ├── dp/                         # Producto de datos (dashboards)
+│   └── met/                        # Gestión de metadatos y trazabilidad
+├── docs/                           # Documentación detallada
 ├── data/
 │   ├── ingesta1/                   # CSV carga inicial
 │   └── ingesta2/                   # CSV carga novedades
 ├── docker-compose.yml              # Orquestación de servicios
 └── README.md
 ```
+
+---
+
+## 🧠 Sobre las tablas `MET_`
+
+El modelo `MET_` permite capturar y mantener:
+- Estructura y propiedades de todos los modelos (`met_model_registry`)
+- Dependencias entre ellos (`met_model_dependencies`)
+- Metadatos de columnas (`met_model_columns`)
+- Historial de versiones (SCD2) con `met_model_registry_hist`
+
+Estas tablas son utilizadas para generar catálogos, trazabilidad, y seguimiento de cambios en el pipeline de datos.
 
 ---
 
@@ -93,5 +108,3 @@ elt-dwa/
 **Introduccíon a Data Warehousing - 2025**
 
 ---
-
-¿Preguntas, mejoras o ideas? ¡Abrí un issue o fork y contribuí!
