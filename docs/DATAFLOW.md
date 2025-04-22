@@ -6,32 +6,7 @@ Este documento representa visualmente el flujo de datos a lo largo del sistema d
 
 ## 📈 Flujo General
 
-```text
- [CSV] 
-    │
-    ▼
- Apache NiFi ──▶ TMP_ (PostgreSQL - Staging)
-                     │
-                     ▼
-             ┌────────────┐
-             │  SQLMesh   │
-             └────────────┘
-                     │
-                     ▼
-    ┌────────────────────────────────────────────┐
-    │                                            │
-    ▼                                            ▼
- DWA_ (Transformado)                   DQM_ (Calidad de Datos)
-    │                                            │
-    ▼                                            ▼
- DWM_ (Histórico - SCD2)               MET_ (Metadatos - modelo + historia)
-    │
-    ▼
- DP_ (Producto de Datos)
-    │
-    ▼
- Lightdash (Dashboards BI)
-```
+![](detailed-data-flow.png)
 
 ---
 
