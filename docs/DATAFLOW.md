@@ -6,7 +6,7 @@ Este documento representa visualmente el flujo de datos a lo largo del sistema d
 
 ## 📈 Flujo General
 
-![](detailed-data-flow.png)
+<img src="detailed-data-flow.png" alt="Data Flow" width="400">
 
 ---
 
